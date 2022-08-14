@@ -1,0 +1,30 @@
+{
+  "name": "smart-lock",
+  "version": "1.0.0",
+  "description": "智能锁",
+  "main": "dist/index.js",
+  "scripts": {
+    "tt": "tsc-alias",
+    "clear": "rimraf -rf dist tsconfig.tsbuildinfo",
+    "compile": "npm run clear && tsc && tsc-alias",
+    "dev": "concurrently \"tsc --outDir ./dist -w\" \"tsc-alias -w\"",
+    "dev2": "tsc --outDir ./dist -w",
+    "test": "node ./dist/test/prousbv9",
+    "test2": "node ./dist/test/prousb"
+  },
+  "author": "suntree",
+  "license": "ISC",
+  "dependencies": {
+    "dayjs": "^1.11.5",
+    "ffi-napi": "^4.0.3",
+    "node-gyp": "^8.4.1"
+  },
+  "devDependencies": {
+    "@types/ffi-napi": "^4.0.5",
+    "@types/node": "^18.7.3",
+    "concurrently": "^7.3.0",
+    "rimraf": "^3.0.2",
+    "tsc-alias": "^1.7.0",
+    "typescript": "v4"
+  }
+}

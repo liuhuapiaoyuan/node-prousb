@@ -1,0 +1,46 @@
+{
+  "compilerOptions": {
+    "target": "ES2019",
+    "lib": [
+      "ES2022",
+      "ES2020",
+      "DOM"
+    ],
+    "pretty": true,
+    "module": "commonjs",
+    "removeComments": false,
+    "preserveConstEnums": true,
+    "moduleResolution": "node",
+    "isolatedModules": true,
+    "experimentalDecorators": true,
+    "noImplicitAny": false,
+    "allowSyntheticDefaultImports": true,
+    "allowUnreachableCode":true,
+    "allowUnusedLabels":true,
+    "outDir": "./dist",
+    "composite": true,
+    "noUnusedLocals": false,
+    "noUnusedParameters": false,
+    "strictNullChecks": false,
+    "sourceMap": true,
+    "declaration": true,
+    "suppressImplicitAnyIndexErrors": true,
+    "rootDir": "./src",
+    "allowJs": true,
+    "resolveJsonModule": true,
+    "typeRoots": [
+      "node_modules/@types",
+    ],
+    "baseUrl": ".",
+    "paths": {
+      "@/*": [
+        "./src/*"
+      ]
+    }
+  },
+  "include": [
+    "./src",
+    "global.d.ts"
+  ],
+  "compileOnSave": false
+}
