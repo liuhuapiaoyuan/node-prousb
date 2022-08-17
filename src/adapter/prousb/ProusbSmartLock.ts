@@ -5,15 +5,14 @@
  * @Author: guohl
  * @Date: 2022-08-14 22:15:31 
  * @LastEditors: guohl
- * @LastEditTime: 2022-08-15 00:40:41
+ * @LastEditTime: 2022-08-17 03:22:27
  */
 import type { ISmartLock, loadCardResult } from '@/lib/ISmartLock';
 import { LockException } from '@/lib/LockException';
 import { DllLoader } from '@/utils/DllLoader';
 import * as path from 'path';
 import * as ref from 'ref-napi';
-const DllDir = path.resolve( './dll/prousb')
-console.log('DllDir',DllDir)
+const DllDir = path.join(__dirname , '../../../dll/prousb')
 
 
 export class ProusbSmartLock implements ISmartLock{

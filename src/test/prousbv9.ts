@@ -1,4 +1,3 @@
-import * as dayjs from 'dayjs';
 /*
  * @Description: 
  * @version: 0.01
@@ -6,26 +5,41 @@ import * as dayjs from 'dayjs';
  * @Author: guohl
  * @Date: 2022-08-14 22:19:48
  * @LastEditors: guohl
- * @LastEditTime: 2022-08-15 00:52:29
+ * @LastEditTime: 2022-08-17 04:25:45
  */
 import { ProusbV9SmartLock } from "..";
 
 
-console.log('=========BEGIN:=ProusbSmartLockV9==============')
-let service = new ProusbV9SmartLock()
-service.version().then(console.log)
-console.log("测试客人开卡")
+async function action(){
+  let service = new ProusbV9SmartLock()
+await service.version().then(console.log)
+await service.version().then(console.log)
+await service.version().then(console.log)
+await service.version().then(console.log)
+await service.version().then(console.log)
+await service.version().then(console.log)
+await service.version().then(console.log)
+/* console.log("测试12124132客人开卡")
 try{
-  service.guestCard(
+  await service.guestCard(
     "1",
     "100014",
     dayjs("2022-08-15 02:33").toDate() 
   ).catch(e=>{
     console.log("测试客人开卡失败",e.message)
+  }).then((x)=>{
+    console.log("操作成功",{x})
   })
 }catch(e){
   console.log(e)
 }
+*/
+} 
+console.log('=========BEGIN:=ProusbSmartLockV9==============')
 
-console.log('==========END:=ProusbSmartLockV9==============')
+action().then(()=>{
+  console.log('==========END:=ProusbSmartLockV9==============')
+}).catch(e=>{
+  console.error(e)
+})
  

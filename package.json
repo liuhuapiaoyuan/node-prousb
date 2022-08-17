@@ -1,7 +1,7 @@
 {
   "name": "smart-lock",
   "version": "1.0.0",
-  "description": "智能锁",
+  "description": "酒店门锁管理",
   "main": "dist/index.js",
   "scripts": {
     "tt": "tsc-alias",

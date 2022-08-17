@@ -5,7 +5,7 @@
  * @Author: guohl
  * @Date: 2022-08-14 22:15:31 
  * @LastEditors: guohl
- * @LastEditTime: 2022-08-15 01:20:54
+ * @LastEditTime: 2022-08-17 10:37:45
  */
 import { CardInfoErros, ISmartLock, loadCardResult } from '@/lib/ISmartLock';
 import { LockException } from '@/lib/LockException';
@@ -14,7 +14,7 @@ import * as assert from 'assert';
 import * as dayjs from 'dayjs';
 import * as path from 'path';
 import * as ref from 'ref-napi';
-const DllDir = path.resolve( './dll/prousbV9')
+const DllDir = path.join(__dirname , '../../../dll/prousbV9')
 
 export class ProusbV9SmartLock implements ISmartLock{
   dll: any;
@@ -23,7 +23,7 @@ export class ProusbV9SmartLock implements ISmartLock{
   constructor(){
     this.dll = DllLoader(DllDir,"V9RF.dll", {
       //方法名称： 返回值，参数列表
-      'GetDLLVersionA': [ ref.types.int, [ ref.refType(ref.types.CString) ] ] , 
+      'GetDLLVersionA': [ ref.types.int, [ ref.refType("string") ] ] , 
       'Buzzer': [ ref.types.int, [  ref.types.uchar] ] , 
       'WriteGuestCardA': [ ref.types.int, [ 
          ref.types.int,
@@ -47,8 +47,11 @@ export class ProusbV9SmartLock implements ISmartLock{
 
 
   async version(): Promise<string> {
-    let pointerSomething= ref.alloc(ref.types.CString,"128");
+    let pointerSomething= ref.allocCString("adaaaaaaaaaasds");
     let vr = this.dll.GetDLLVersionA(pointerSomething)
+    if(pointerSomething.isNull()){
+      throw new LockException("版本获取失败,返回Null")
+    }
     let version = pointerSomething.readCString(0)
     if(vr != 0){
       throw new LockException("版本获取失败,返回："+vr)
@@ -66,7 +69,7 @@ export class ProusbV9SmartLock implements ISmartLock{
 
   
   async guestCard(hotelId: string, lockNo: string, eTime: Date): Promise<string> {
-    let pointerSomething= ref.alloc(ref.types.CString,"128");
+    let pointerSomething= ref.allocCString("");
     this.Dai = (this.Dai+1)%255
     let dlsCoID  = Number(hotelId)
     // 每次发出一张就+1
@@ -88,7 +91,7 @@ export class ProusbV9SmartLock implements ISmartLock{
     return cardHexStr
   }
   async eraseCard(hotelId: string): Promise<string> {
-    let pointerSomething= ref.alloc(ref.types.CString,"128");
+    let pointerSomething= ref.allocCString("");
     let code = this.dll.CardEraseA(Number(hotelId),pointerSomething)
     if(code ==1 ){
       throw new LockException("发卡器没有连接")
@@ -101,8 +104,8 @@ export class ProusbV9SmartLock implements ISmartLock{
   }
   
   async loadCard(hotelId: string): Promise<loadCardResult> {
-    let cardHexStrRef= ref.alloc(ref.types.CString,"128");
-    let infoRef= ref.alloc(ref.types.CString,"128");
+    let cardHexStrRef= ref.allocCString("");
+    let infoRef= ref.allocCString("");
     let code = this.dll.GetGuestCardinfoA(Number(hotelId),cardHexStrRef,infoRef)
     if(code != 0 ){
       throw CardInfoErros[code]
@@ -132,7 +135,7 @@ export class ProusbV9SmartLock implements ISmartLock{
 
   
   async readCardNo(): Promise<string> {
-    let pointerSomething= ref.alloc(ref.types.CString,"128");
+    let pointerSomething= ref.allocCString("");
     let vr = this.dll.ReadCard("1",pointerSomething)
     if(vr != 0){
       throw new LockException("卡片读取失败")
