@@ -5,7 +5,7 @@
  * @Author: guohl
  * @Date: 2022-08-14 22:15:31 
  * @LastEditors: guohl
- * @LastEditTime: 2022-08-17 21:55:55
+ * @LastEditTime: 2022-08-17 21:57:35
  */
 import { CardInfoErros, ISmartLock, loadCardResult } from '@/lib/ISmartLock';
 import { LockException } from '@/lib/LockException';
@@ -79,7 +79,7 @@ export class ProusbV9SmartLock implements ISmartLock{
     let LLock   =  1
     //年月日时分，各2位
     let EDate  =  dayjs(eTime).format("YYMMDDHHmm")
-    console.log('dlsCoID,CardNo+"",Dai,LLock,EDate,lockNo,',dlsCoID,CardNo,Dai,LLock,EDate,lockNo+"")
+    //console.log('dlsCoID,CardNo+"",Dai,LLock,EDate,lockNo,',dlsCoID,CardNo,Dai,LLock,EDate,lockNo+"")
     let code = this.dll.WriteGuestCardA(
       dlsCoID,CardNo,Dai,LLock,EDate,lockNo+"",
       pointerSomething)
