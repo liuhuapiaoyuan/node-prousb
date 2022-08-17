@@ -5,10 +5,11 @@
  * @Author: guohl
  * @Date: 2022-08-14 22:15:31 
  * @LastEditors: guohl
- * @LastEditTime: 2022-08-17 10:37:45
+ * @LastEditTime: 2022-08-17 21:55:55
  */
 import { CardInfoErros, ISmartLock, loadCardResult } from '@/lib/ISmartLock';
 import { LockException } from '@/lib/LockException';
+import { delay } from '@/lib/utils';
 import { DllLoader } from '@/utils/DllLoader';
 import * as assert from 'assert';
 import * as dayjs from 'dayjs';
@@ -26,21 +27,21 @@ export class ProusbV9SmartLock implements ISmartLock{
       'GetDLLVersionA': [ ref.types.int, [ ref.refType("string") ] ] , 
       'Buzzer': [ ref.types.int, [  ref.types.uchar] ] , 
       'WriteGuestCardA': [ ref.types.int, [ 
-         ref.types.int,
-         ref.types.uchar,
-         ref.types.uchar,
-         ref.types.uchar,
-         ref.types.uchar,
-         ref.types.uchar,
-         ref.refType(ref.types.CString),
+         ref.types.int, // dlscoid
+         ref.types.byte,  //cardno
+         ref.types.byte,  // dai
+         ref.types.byte,  //llock
+         ref.types.CString, // eDate
+         ref.types.CString, // roomNo
+          ref.refType("string") ,  //cardhexstr
         ] ] , 
-      'CardEraseA': [ ref.types.int, [   ref.refType(ref.types.CString)  ] ] , 
-      'ReadCard': [ ref.types.int, [   ref.refType(ref.types.CString)  ] ] , 
+      'CardEraseA': [ ref.types.int, [    ref.refType("string")   ] ] , 
+      'ReadCard': [ ref.types.int, [    ref.refType("string")   ] ] , 
       // 读取卡信息
       'GetGuestCardinfoA': [ ref.types.int, [  
         ref.types.int,
-         ref.refType(ref.types.CString)  ,
-         ref.refType(ref.types.CString)  ,
+          ref.refType("string")   ,
+          ref.refType("string")   ,
         ] ] , 
     });
   }
@@ -69,36 +70,41 @@ export class ProusbV9SmartLock implements ISmartLock{
 
   
   async guestCard(hotelId: string, lockNo: string, eTime: Date): Promise<string> {
-    let pointerSomething= ref.allocCString("");
+    let pointerSomething= ref.allocCString("111111111");
     this.Dai = (this.Dai+1)%255
     let dlsCoID  = Number(hotelId)
     // 每次发出一张就+1
     let CardNo   = ++ this.carNo
-    let Dai  = this.Dai +""
-    let LLock   =  "1" 
+    let Dai  = this.Dai  
+    let LLock   =  1
     //年月日时分，各2位
     let EDate  =  dayjs(eTime).format("YYMMDDHHmm")
+    console.log('dlsCoID,CardNo+"",Dai,LLock,EDate,lockNo,',dlsCoID,CardNo,Dai,LLock,EDate,lockNo+"")
     let code = this.dll.WriteGuestCardA(
-      dlsCoID,CardNo+"",Dai,LLock,EDate,lockNo,
+      dlsCoID,CardNo,Dai,LLock,EDate,lockNo+"",
       pointerSomething)
+    await delay(400)
     if(code ==1 ){
       throw new LockException("发卡器没有连接")
     }
     if(code == -2 ){
       throw new LockException("没有读到有效卡片")
     }
+    await this.buzzer(500)
     let cardHexStr = pointerSomething.readCString(0)
     return cardHexStr
   }
   async eraseCard(hotelId: string): Promise<string> {
     let pointerSomething= ref.allocCString("");
     let code = this.dll.CardEraseA(Number(hotelId),pointerSomething)
+    await delay(400)
     if(code ==1 ){
       throw new LockException("发卡器没有连接")
     }
     if(code == -2 ){
       throw new LockException("没有读到有效卡片")
     }
+    await this.buzzer(500)
     let cardHex = pointerSomething.readCString(0)
     return cardHex
   }
@@ -107,9 +113,11 @@ export class ProusbV9SmartLock implements ISmartLock{
     let cardHexStrRef= ref.allocCString("");
     let infoRef= ref.allocCString("");
     let code = this.dll.GetGuestCardinfoA(Number(hotelId),cardHexStrRef,infoRef)
+    await delay(400)
     if(code != 0 ){
       throw CardInfoErros[code]
     } 
+    await this.buzzer(500)
     let cardHexStr = cardHexStrRef.readCString(0)
     let info = infoRef.readCString(0)
     if(info.length!=40){
@@ -140,6 +148,7 @@ export class ProusbV9SmartLock implements ISmartLock{
     if(vr != 0){
       throw new LockException("卡片读取失败")
     }
+    await this.buzzer(500)
     let cardHex = pointerSomething.readCString(0) 
     return this.getCardNo(cardHex)
   }

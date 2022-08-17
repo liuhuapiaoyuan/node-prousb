@@ -1,6 +1,6 @@
 {
   "name": "smart-lock",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "酒店门锁管理",
   "main": "dist/index.js",
   "scripts": {
@@ -17,7 +17,8 @@
   "dependencies": {
     "dayjs": "^1.11.5",
     "ffi-napi": "^4.0.3",
-    "node-gyp": "^8.4.1"
+    "node-gyp": "^8.4.1",
+    "ref-napi": "^3.0.3"
   },
   "devDependencies": {
     "@types/ffi-napi": "^4.0.5",

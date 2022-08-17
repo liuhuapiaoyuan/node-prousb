@@ -5,21 +5,15 @@
  * @Author: guohl
  * @Date: 2022-08-14 22:19:48
  * @LastEditors: guohl
- * @LastEditTime: 2022-08-17 04:25:45
+ * @LastEditTime: 2022-08-17 21:56:44
  */
+import * as dayjs from "dayjs";
 import { ProusbV9SmartLock } from "..";
 
 
 async function action(){
-  let service = new ProusbV9SmartLock()
-await service.version().then(console.log)
-await service.version().then(console.log)
-await service.version().then(console.log)
-await service.version().then(console.log)
-await service.version().then(console.log)
-await service.version().then(console.log)
-await service.version().then(console.log)
-/* console.log("测试12124132客人开卡")
+  let service = new ProusbV9SmartLock() 
+ console.log("测试12124132客人开卡")
 try{
   await service.guestCard(
     "1",
@@ -28,12 +22,12 @@ try{
   ).catch(e=>{
     console.log("测试客人开卡失败",e.message)
   }).then((x)=>{
-    console.log("操作成功",{x})
+    console.log("操作成功")
   })
 }catch(e){
   console.log(e)
 }
-*/
+
 } 
 console.log('=========BEGIN:=ProusbSmartLockV9==============')
 
