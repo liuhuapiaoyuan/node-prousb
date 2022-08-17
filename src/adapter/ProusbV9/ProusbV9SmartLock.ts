@@ -5,7 +5,7 @@
  * @Author: guohl
  * @Date: 2022-08-14 22:15:31 
  * @LastEditors: guohl
- * @LastEditTime: 2022-08-17 21:57:35
+ * @LastEditTime: 2022-08-18 00:20:07
  */
 import { CardInfoErros, ISmartLock, loadCardResult } from '@/lib/ISmartLock';
 import { LockException } from '@/lib/LockException';
@@ -144,7 +144,7 @@ export class ProusbV9SmartLock implements ISmartLock{
   
   async readCardNo(): Promise<string> {
     let pointerSomething= ref.allocCString("");
-    let vr = this.dll.ReadCard("1",pointerSomething)
+    let vr = this.dll.ReadCard(pointerSomething)
     if(vr != 0){
       throw new LockException("卡片读取失败")
     }
