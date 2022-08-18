@@ -5,7 +5,7 @@
  * @Author: guohl
  * @Date: 2022-08-14 22:15:31 
  * @LastEditors: guohl
- * @LastEditTime: 2022-08-18 00:20:07
+ * @LastEditTime: 2022-08-19 01:35:21
  */
 import { CardInfoErros, ISmartLock, loadCardResult } from '@/lib/ISmartLock';
 import { LockException } from '@/lib/LockException';
@@ -35,7 +35,7 @@ export class ProusbV9SmartLock implements ISmartLock{
          ref.types.CString, // roomNo
           ref.refType("string") ,  //cardhexstr
         ] ] , 
-      'CardEraseA': [ ref.types.int, [    ref.refType("string")   ] ] , 
+      'CardEraseA': [ ref.types.int, [  ref.types.int,  ref.refType("string")   ] ] , 
       'ReadCard': [ ref.types.int, [    ref.refType("string")   ] ] , 
       // 读取卡信息
       'GetGuestCardinfoA': [ ref.types.int, [  
@@ -70,6 +70,14 @@ export class ProusbV9SmartLock implements ISmartLock{
 
   
   async guestCard(hotelId: string, lockNo: string, eTime: Date): Promise<string> {
+
+    if(!/^\d{6}$/.test(lockNo)){
+      throw new Error("锁号只能是6位数字")
+    }
+    if(!/^\d+$/.test(hotelId)){
+      throw new Error("房间编号只能是数字")
+    }
+
     let pointerSomething= ref.allocCString("111111111");
     this.Dai = (this.Dai+1)%255
     let dlsCoID  = Number(hotelId)

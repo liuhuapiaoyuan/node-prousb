@@ -1,6 +1,6 @@
 {
   "name": "smart-lock",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "酒店门锁管理",
   "main": "dist/index.js",
   "scripts": {
